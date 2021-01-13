@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 0; }
+            canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+        <video autoplay id="webcam" playsinline></video>
+        <button onclick="stop();" style="position: absolute; left: 50px; top: 50px;">Switch Camera</button>
+        <button onclick="takePhoto();" style="position: absolute; left: 50px; bottom: 50px;">Take Photo</button>
+        
+        <script src="https://threejs.org/build/three.js"></script>
+		<script>
+			const scene = new THREE.Scene();
+			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+            const renderer = new THREE.WebGLRenderer( { alpha: true } );
+            renderer.setClearColor( 0x000000, 0 ); // the default
+
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+
+			const geometry = new THREE.BoxGeometry();
+			const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+			const cube = new THREE.Mesh( geometry, material );
+			scene.add( cube );
+
+			camera.position.z = 5;
+
+			const animate = function () {
+				requestAnimationFrame( animate );
+
+				cube.rotation.x += 0.01;
+				cube.rotation.y += 0.01;
+
+				renderer.render( scene, camera );
+			};
+
+            animate();
+            
+            //video settings
+            const video = document.querySelector('video');
+            let cameraDirection = "user"
+
+            const startStream = async () => {
+                if (cameraDirection === "user") {
+                    cameraDirection = "environment";
+                } else if (cameraDirection === "environment") {
+                    cameraDirection = "user";
+                }
+
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: cameraDirection } });
+                    handleStream(stream);
+            };
+
+            const handleStream = (stream) => {
+                video.srcObject = stream;
+            };
+
+            startStream();
+
+            var stop = () => {
+                console.log("stop button clicked");
+                video.srcObject && video.srcObject.getTracks().forEach(t => t.stop());
+                startStream();
+            }
+
+            var takePhoto = () => {
+                console.log("take photo");
+            }
+        </script>
+        
+	</body>
+</html>
