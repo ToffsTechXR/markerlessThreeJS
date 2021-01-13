@@ -13,13 +13,13 @@
                 width: auto; height: auto;
             }
         </style>
+        <script src="https://threejs.org/build/three.js"></script>
 	</head>
 	<body>
         <video autoplay id="webcam" playsinline></video>
         <button onclick="stop();" style="position: absolute; left: 50px; top: 50px;">Switch Camera</button>
         <button onclick="takePhoto();" style="position: absolute; left: 50px; bottom: 50px;">Take Photo</button>
-        
-        <script src="https://threejs.org/build/three.js"></script>
+
 		<script>
 			const scene = new THREE.Scene();
 			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
